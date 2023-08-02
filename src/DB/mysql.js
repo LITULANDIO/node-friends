@@ -1,0 +1,105 @@
+const mysql = require('mysql')
+const config = require('../config')
+
+const dbConfig = {
+    host: config.mysql.host,
+    user: config.mysql.user,
+    password: config.mysql.password,
+    database: config.mysql.database
+}
+
+let connection;
+
+const connectMysql = () => {
+    connection = mysql.createConnection(dbConfig)
+    connection.connect((error) => {
+        if(error){
+            console.error('[db error]', error)
+            setTimeout(connectMysql, 200)
+        } else {
+            console.info('DB connect')
+        }
+    })
+    connection.on('error', error => {
+        console.error('[db error]', error)
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            connectMysql();
+        } else {
+            throw error;
+        }
+    } )
+}
+
+connectMysql();
+
+const getAllItems = (table, data = null) => {
+    return new Promise((resolve, reject) => {
+        connection.query(`SELECT * FROM ${table}`, (error, result) => {
+            error ? reject(error) : resolve(result)
+        })
+    })
+}
+
+const getItems = (table, data = null) => {
+    return new Promise((resolve, reject) => {
+        connection.query(`SELECT ${data} FROM ${table}`, (error, result) => {
+            error ? reject(error) : resolve(result)
+        })
+    })
+}
+
+
+const getItem = (table, id, column = 'id') => {
+    console.log('[get =>', table, id, column)
+    return new Promise((resolve, reject) => {
+        connection.query(`SELECT * FROM ${table} WHERE ${column}=${id}`, (error, result) => {
+            error ? reject(error) : resolve(result)
+        })
+    })
+}
+
+const insertItem = (table, data) => {
+    console.log('[AddUser =>', data)
+    return new Promise((resolve, reject) => {
+        connection.query(`INSERT INTO ${table} SET ? ON DUPLICATE KEY UPDATE ?`, [data,data], (error, result) => {
+            error ? reject(error) : resolve(result)
+        })
+    })
+}
+
+const updateItem = (table, column, data, id) => {
+    console.log('[Update =>', table, column, data, id)
+    return new Promise((resolve, reject) => {
+        connection.query(`UPDATE ${table} SET ${column} = ? WHERE id = ?`, [data, id], (error, result) =>  {
+            error ? reject(error) : resolve(result)
+        })
+    })
+}
+
+const deleteItem = (table, data) => {
+    return new Promise((resolve, reject) => {
+        connection.query(`DELETE FROM ${table} WHERE id = ?`, data, (error, result) => {
+            error ? reject(error) : resolve(result)
+        })
+    })
+}
+
+function query(table, consult) {
+    return new Promise((resolve, reject) => {
+        connection.query(`SELECT * FROM ${table} WHERE ?`, consult, (error, result) => {
+            error ? reject(error) : resolve(result[0])
+        })
+    })
+}
+
+
+module.exports = {
+    getAllItems,
+    getItem,
+    insertItem,
+    deleteItem,
+    getAllItems,
+    getItems,
+    query,
+    updateItem
+}

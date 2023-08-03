@@ -1,6 +1,8 @@
-const app = require('./app')
-
-
-app.listen(app.get('port'), 'app-node.quisqui.com', () => {
-    console.log('servidor escoltant al port', app.get('port'))
-})
+const app = require('./app');
+const port = process.env.PORT || 4000;
+app.get('/', function(req, res) {
+  res.sendfile('public/index.html');
+});
+server.listen(4000, () => {
+	  console.log(`Servidor escuchando en el puerto ${port}`);
+});

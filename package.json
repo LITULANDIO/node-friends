@@ -21,8 +21,5 @@
     "nodemon": "^3.0.1",
     "sib-api-v3-sdk": "^8.5.0",
     "uniqid": "^5.4.0"
-  },
-  "devDependencies": {
-    "dotenv": "^16.0.3"
   }
 }

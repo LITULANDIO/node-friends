@@ -9,19 +9,23 @@ router.post('/sendmail', sendMailGuest)
 
   const joinSpacesStr = (str) => str.replace(/\s/g,'')
   const apiKey = process.env.API_MAIL
+  const emailSMTP = 'friendsinvisbles@gmail.com'
 
   function sendMailGuest(req, res, next) {
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'litulandio@gmail.com',
-          pass:  apiKey,
-        },
+          user: emailSMTP,
+          pass: apiKey,
+        }
       });
+      console.log('apikey =>', apiKey)
+      console.log('mail =>', emailSMTP)
 
       const mailOptions = {
-        from: req.body.sender,
+        from: emailSMTP,
+        replyTo: req.body.sender,
         to: req.body.to,
         subject: `Benvingut a la subscripció del grup ${req.body.name}`,
         html: `
@@ -31,6 +35,7 @@ router.post('/sendmail', sendMailGuest)
             <a href='http://localhost:3000/'>App friends invisible</a>
         `,
       };
+      console.log(mailOptions)
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {

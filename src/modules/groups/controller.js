@@ -24,6 +24,7 @@ module.exports = (dbInject) => {
             admin: body.admin,
             name: body.name,
             date: body.date,
+            location: body.location,
             budget: body.budget,
             snug: `${crypt.split('/')[1] || crypt}`
         }

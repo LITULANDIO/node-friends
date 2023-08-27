@@ -9,7 +9,7 @@ router.get('/', getAllUsers)
 router.get('/:id', getUser)
 router.post('/', /*security(),*/ addUser)
 router.put('/', security(), deleteUser)
-router.post('/updatePhoto', updatePhoto)
+router.put('/updatePhoto', updatePhoto)
 
 async function getAllUsers(req, res, next){
     try {
@@ -47,7 +47,7 @@ async function deleteUser(req, res, next){
 }
 async function updatePhoto(req, res, next) {
     try {
-        await controller.updatePhoto(req.body.photo, req.body.id)
+        await controller.updatePhoto(req.body)
         requests.success(req, res, 'Update photo', 200)
     }catch(error) {
         next(error)

@@ -14,9 +14,10 @@ async function login(req, res, next) {
     console.log('login =>', req.body)
     try {
         const token = await controller.login(req.body.user, req.body.password)
+        console.log('token es', token)
         requests.success(req, res, token, 200)
     } catch(error) {
-        next(error)
+        next('eeror login', error)
     }
 }
 

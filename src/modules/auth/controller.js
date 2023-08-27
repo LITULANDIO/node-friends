@@ -18,6 +18,7 @@ module.exports = (dbInject) => {
             db.insertItem(TABLE, data)
             console.log(data)
         }catch(error){
+            console.log('error si entra al try', error)
             return {
                 error: true,
                 msg: "La contraseña o el nombre de usuario no son correctos"
